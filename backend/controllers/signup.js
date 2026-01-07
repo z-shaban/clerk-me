@@ -12,9 +12,7 @@ export const signupController = async(req,res, next)=>{
             }
         })
 
-        console.log(user)
-        console.log(req.validatedData)
-
+       
         if(user){
               if(user.email === req.validatedData.email){
             return res.status(409).json({message: "email exists"})
