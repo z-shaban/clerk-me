@@ -12,7 +12,7 @@ async function login (req,res){
     if(!user){
         return res.status(401).json({error: "Invalid credentials"})
     }
-
+    
     const matchedPassword = await bcrypt.compare(req.validatedData.password, user.password)
 
     if(!matchedPassword){
@@ -33,11 +33,12 @@ async function login (req,res){
                 res.status(500).json({error: "Error generating token"})
                 console.error(error)
             }
-            return res.status(201).json({token, user:{username: user.username}})
+            return res.status(200).json({token, user:{username: user.username}})
         }
     )
 
    } catch (error) {
+    console.error(error)
      res.status(500).json({error:"Server error "})
    }
 }
