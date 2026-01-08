@@ -1,9 +1,14 @@
 import App from "./App";
-import { Signup } from "./components/signup";
+import { SignupForm } from "./components/signupform";
+import { Profile } from "./pages/profile";
 
 export const routes = [
     {
         path: '/',
-        element: <Signup/>
+        element: <SignupForm/>
+    },
+    {
+        path: '/profile',
+        element: <Profile />   
     }
 ]
