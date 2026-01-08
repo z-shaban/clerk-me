@@ -1,14 +1,11 @@
 import { useState } from "react"
-import { Links, useNavigate } from "react-router"
+import { useNavigate } from "react-router"
 import { API_URL } from "../config"
 import { Link } from "react-router"
 
-export function SignupForm(){
-  
-
+export function LoginForm(){
    const [userCredentials, setUserCredentials] = useState({
     username: "",
-    email: "",
     password:""
    })
    const [error, setError]= useState(null)
@@ -25,7 +22,7 @@ export function SignupForm(){
     e.preventDefault();
     
     try {
-        const response = await fetch(`${API_URL}`,{
+        const response = await fetch(`${API_URL}/login`,{
             method: "POST",
             headers:{
                "Content-Type": "application/json"
@@ -47,22 +44,13 @@ export function SignupForm(){
 
     return(
         <>
-        <h1>sign up page</h1>
+        <h1>login page</h1>
          <form onSubmit={handleSubmit}>
          <label>Username:
          <input
           type="text" 
           name="username"
           value={userCredentials.username}
-          onChange={handleChange}
-          required
-        />
-      </label>
-       <label>Email:
-         <input
-         type="email" 
-         name="email"
-          value={userCredentials.email}
           onChange={handleChange}
           required
         />
@@ -76,8 +64,8 @@ export function SignupForm(){
           required
         />
       </label>
-      <button type="submit">Create Account</button>
-      <p>Already have an account <Link to="login">login</Link> </p>
+      <button type="submit">Log in</button>
+      <p> Don't have an account <Link to="/">Sign up</Link> </p>
     </form>
         </>
     )
