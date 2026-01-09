@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Links, useNavigate } from "react-router"
+import { useNavigate } from "react-router"
 import { API_URL } from "../config"
 import { Link } from "react-router"
 
@@ -47,38 +47,41 @@ export function SignupForm(){
 
     return(
         <>
-        <h1>sign up page</h1>
-         <form onSubmit={handleSubmit}>
-         <label>Username:
+        <div className="border-2 border-slate-200 flex flex-col items-center p-8">
+           <h1>CREATE AN ACCOUNT</h1>
+         <form onSubmit={handleSubmit} className="flex flex-col">
+         <label>Username:</label>
          <input
+          className="border-2 border-black mb-2"
           type="text" 
           name="username"
           value={userCredentials.username}
           onChange={handleChange}
           required
         />
-      </label>
-       <label>Email:
-         <input
+       <label>Email:</label>
+       <input
+       className="border-2 border-black mb-2"
          type="email" 
          name="email"
           value={userCredentials.email}
           onChange={handleChange}
           required
         />
-      </label>
-       <label>Password:
-         <input
+       <label>Password:</label>
+        <input
+        className="border-2 border-black mb-2"
           type="password" 
           name="password"
           value={userCredentials.password}
           onChange={handleChange}
           required
         />
-      </label>
-      <button type="submit">Create Account</button>
-      <p>Already have an account <Link to="login">login</Link> </p>
+      <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-md transition duration-200">Create Account</button>
+      <p>Already have an account? <Link to="login" className="text-blue-600 underline">login</Link> </p>
     </form>
+        </div>
+       
         </>
     )
 }

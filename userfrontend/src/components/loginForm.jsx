@@ -44,29 +44,32 @@ export function LoginForm(){
 
     return(
         <>
-        <h1>login page</h1>
-         <form onSubmit={handleSubmit}>
-         <label>Username:
-         <input
+        <div className="border-2 border-slate-200 flex flex-col items-center p-8">
+          <h1>login page</h1>
+         <form onSubmit={handleSubmit} className="flex flex-col">
+         <label>Username:</label>
+          <input
+          className="border-2 border-black mb-2"
           type="text" 
           name="username"
           value={userCredentials.username}
           onChange={handleChange}
           required
         />
-      </label>
-       <label>Password:
-         <input
+       <label>Password:</label>
+        <input
+        className="border-2 border-black mb-2"
           type="password" 
           name="password"
           value={userCredentials.password}
           onChange={handleChange}
           required
         />
-      </label>
-      <button type="submit">Log in</button>
-      <p> Don't have an account <Link to="/">Sign up</Link> </p>
+      <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-md transition duration-200">Log in</button>
+      <p> Don't have an account <Link to="/" className="text-blue-600 underline">Sign up</Link> </p>
     </form>
+        </div>
+        
         </>
     )
 }
