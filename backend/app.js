@@ -13,9 +13,9 @@ const app = express()
 app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
-app.use('/', signup)
+app.use('/signup', signup)
 app.use('/login', loginUser)
-app.use('/chat', chat)
+app.use('/', chat)
 
 
 

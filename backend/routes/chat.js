@@ -1,8 +1,9 @@
 import {Router} from "express"
-import { main } from "../controllers/chat.js"
+import { myChat } from "../controllers/chat.js"
+
 
 const chat = Router()
 
-chat.post('/', main)
+chat.post("/", myChat)
 
 export {chat}

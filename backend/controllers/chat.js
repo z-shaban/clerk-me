@@ -1,35 +1,6 @@
 import Groq from "groq-sdk";
 import 'dotenv/config'
-import readline from "readline"
 const groq = new Groq()
-
-/*export async function main(req,res){
-     const chatCompletion = await chat(req,res);
-     const message = chatCompletion.choices[0].message.content || ""
-     res.json(message)
-    console.log(message)
-}
-
-async function chat(req,res) {
-    return groq.chat.completions.create({
-        messages:[
-            { role: 'system', 
-                content: 'You are a simulated patient.' },
-            {
-                role: "user",
-                content: req.body.message
-            }
-        ],
-
-      model: 'openai/gpt-oss-20b',
-    })
-}*/
-
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
 
 const systemPrompt = `
 You are a simulated patient in an exam setting where a user will take a history from you answer like a real patient.
@@ -103,7 +74,7 @@ const conversationHistory = [
             }
 ]
 
-async function newChat() {
+async function newChat(req,res) {
     const chatCompletion = await groq.chat.completions.create({
         messages: conversationHistory,
         model: "openai/gpt-oss-20b"
@@ -114,25 +85,21 @@ async function newChat() {
         role: "assistant",
         content: message
     })
+    res.json(conversationHistory)
     console.log(`Patient: ${message}`)
-  
 }
 
-async function chat(){
-    rl.question(">Dr.", async (userQuestion)=>{
-        conversationHistory.push({
+
+export async function myChat(req,res){
+   conversationHistory.push({
             role: "user",
-            content: userQuestion
+            content: req.body.userQuestion
         })
 
-       await newChat()
-       console.log(conversationHistory)
-       chat()
-    })
-    
+       await newChat(req,res)
 }
 
-chat();
+
 
 
 
