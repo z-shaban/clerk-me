@@ -1,5 +1,6 @@
 import Groq from "groq-sdk";
 import 'dotenv/config'
+import readline from "readline"
 const groq = new Groq()
 
 /*export async function main(req,res){
@@ -23,6 +24,12 @@ async function chat(req,res) {
       model: 'openai/gpt-oss-20b',
     })
 }*/
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
 
 const systemPrompt = `
 You are a simulated patient in an exam setting where a user will take a history from you answer like a real patient.
@@ -93,10 +100,6 @@ const conversationHistory = [
     {
                 role: "system",
                 content: systemPrompt
-            },
-            {
-                role: "user",
-                content: "what brings you here?"
             }
 ]
 
@@ -111,10 +114,25 @@ async function newChat() {
         role: "assistant",
         content: message
     })
-    console.log(conversationHistory)
-    console.log(message)
-   
+    console.log(`Patient: ${message}`)
+  
 }
-newChat()
+
+async function chat(){
+    rl.question(">Dr.", async (userQuestion)=>{
+        conversationHistory.push({
+            role: "user",
+            content: userQuestion
+        })
+
+       await newChat()
+       console.log(conversationHistory)
+       chat()
+    })
+    
+}
+
+chat();
+
 
 
