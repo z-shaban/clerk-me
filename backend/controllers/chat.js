@@ -1,8 +1,9 @@
 import Groq from "groq-sdk";
 import 'dotenv/config'
+import {prisma} from "../lib/prisma.js";
 const groq = new Groq()
 
-const systemPrompt = `
+/*const systemPrompt = `
 You are a simulated patient in an exam setting where a user will take a history from you answer like a real patient.
 
 Guidelines.
@@ -72,11 +73,25 @@ const conversationHistory = [
                 role: "system",
                 content: systemPrompt
             }
+] */ 
+
+const condition  = await prisma.case.findUnique({
+    where:{
+        id:1
+    }
+})
+
+const prompt = [
+    {
+        role: "system",
+        content: `${condition.systemprompt} ${condition.script}`
+    },
+    ... condition.conversationHistory
 ]
 
 async function newChat(req,res) {
     const chatCompletion = await groq.chat.completions.create({
-        messages: conversationHistory,
+        messages: prompt,
         model: "openai/gpt-oss-20b"
     })
 
