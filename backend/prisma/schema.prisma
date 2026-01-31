@@ -21,6 +21,13 @@ model User {
   role     Role   @default(USER)
 }
 
+model Case {
+  id                  Int    @id @default(autoincrement())
+  systemprompt        String
+  script              String
+  conversationHistory Json
+}
+
 enum Role {
   USER
   ADMIN
