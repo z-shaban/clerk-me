@@ -23,6 +23,7 @@ model User {
 
 model Case {
   id                  Int    @id @default(autoincrement())
+  name                String
   systemprompt        String
   script              String
   conversationHistory Json
