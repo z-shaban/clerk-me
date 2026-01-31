@@ -5,7 +5,8 @@ const groq = new Groq()
 
 
 async function newChat(req,res) {
-    const myCase  = await prisma.case.findUnique({
+    try {
+         const myCase  = await prisma.case.findUnique({
     where:{
         id:1
     }
@@ -38,17 +39,24 @@ async function newChat(req,res) {
     data: { conversationHistory: updatedConversationHistory }
   })
 
-    res.json(updatedConversationHistory)
+    res.status(200).json(updatedConversationHistory)
+    } catch (error) {
+         console.error(error)
+        res.status(500).json('something went wrong')
+    }
+   
 }
 
 
 export async function myChat(req,res){
-    const myCase  = await prisma.case.findUnique({
+    /*fetch case from database*/
+    try {
+      const myCase  = await prisma.case.findUnique({
     where:{
         id:1
     }
-})
-const updatedConversationHistory = myCase.conversationHistory || []
+  })
+   const updatedConversationHistory = myCase.conversationHistory || []
 
    updatedConversationHistory.push({
         role: "user",
@@ -60,7 +68,12 @@ const updatedConversationHistory = myCase.conversationHistory || []
     data: { conversationHistory:updatedConversationHistory}
   })
   
-  await newChat(req,res)
+  await newChat(req,res)  
+    } catch (error) {
+        console.error(error)
+        res.status(500).json('something went wrong')
+    }
+    
 }
 
 
