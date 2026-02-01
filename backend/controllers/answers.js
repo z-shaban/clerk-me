@@ -3,7 +3,7 @@ import 'dotenv/config'
 import {prisma} from "../lib/prisma.js";
 const groq = new Groq()
 
-const prompt = 'You are an examiner for a history taking osce. The student is supposed to provide a diagnosis and you are to give  feedback based on the script and conversation history.'
+
 export async function answers(req,res) {
     try {
         const myCase  = await prisma.case.findUnique({
@@ -20,7 +20,7 @@ export async function answers(req,res) {
 
         const answerHistory = answer.answerHistory
 
-        /*convert conversation history from an array of objects to a string since groq llm only accepts Strings*/
+      /*convert conversation history to string to include as context in system prompt*/
         const conversationHistory = myCase.conversationHistory.map(m=> `${m.role} : ${m.content}`).join('\n')
 
         const systemPrompt = `Prompt: ${answer.prompt} Case Script:${myCase.script} Conversation history: ${conversationHistory}` 
@@ -55,10 +55,11 @@ await prisma.answer.update({
     where: { id: answer.id },
     data: { answerHistory: answerHistory }
   })
-    res.json(message)
+    res.status(200).json(message)
    
    
     } catch (error) {
+        res.status(500).json({ error: 'Something went wrong' })
         console.error(error)
     }
 }
