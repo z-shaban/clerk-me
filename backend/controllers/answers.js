@@ -3,9 +3,20 @@ import 'dotenv/config'
 import {prisma} from "../lib/prisma.js";
 const groq = new Groq()
 
-const systemPrompt = 'You are an examiner for a history taking osce. The student is supposed to provide a diagnosis and you are give feedback. the right diagnosis is diabetes'
-async function answers(req,res) {
+const prompt = 'You are an examiner for a history taking osce. The student is supposed to provide a diagnosis and you are to give  feedback based on the script and conversation history.'
+export async function answers(req,res) {
     try {
+        const myCase  = await prisma.case.findUnique({
+        where:{
+        id:1
+        }
+        })
+
+        /*convert conversation history from an array of objects to a string since groq llm only accepts Strings*/
+        const conversationHistory = myCase.conversationHistory.map(m=> `${m.role} : ${m.content}`).join('\n')
+
+        const systemPrompt = `Prompt: ${prompt} Case Script:${myCase.script} Conversation history: ${conversationHistory}` 
+       
         const chatCompletion = await groq.chat.completions.create({
         messages: [
             {
@@ -14,17 +25,18 @@ async function answers(req,res) {
             },
             {
                 role: "user",
-                content: "my diagnosis is diabetes"
+                content: req.body.diagnosis
             }
         ],
         model: "openai/gpt-oss-20b"
     })
 
     const message = chatCompletion.choices[0].message.content || "nothing"
-    console.log(message)
+    res.json(message)
+   
+   
     } catch (error) {
         console.error(error)
     }
 }
 
-answers()

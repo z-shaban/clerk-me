@@ -1,11 +1,10 @@
 import {Router} from "express"
+import { answers } from "../controllers/answers.js"
 
+const answer = Router()
 
+answer.get('/', (req,res)=>{res.send('hi')})
 
-const answers = Router()
+answer.post("/", answers)
 
-answers.post("/", (req,res)=>{
-    res.send('hi')
-})
-
-export {answers}
+export {answer}
