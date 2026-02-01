@@ -8,14 +8,22 @@ export async function answers(req,res) {
     try {
         const myCase  = await prisma.case.findUnique({
         where:{
-        id:1
+        id: 1
         }
         })
+
+        const answer = await prisma.answer.findUnique({
+        where:{
+        id: 1
+        }
+        })
+
+        const answerHistory = answer.answerHistory
 
         /*convert conversation history from an array of objects to a string since groq llm only accepts Strings*/
         const conversationHistory = myCase.conversationHistory.map(m=> `${m.role} : ${m.content}`).join('\n')
 
-        const systemPrompt = `Prompt: ${prompt} Case Script:${myCase.script} Conversation history: ${conversationHistory}` 
+        const systemPrompt = `Prompt: ${answer.prompt} Case Script:${myCase.script} Conversation history: ${conversationHistory}` 
        
         const chatCompletion = await groq.chat.completions.create({
         messages: [
@@ -32,6 +40,21 @@ export async function answers(req,res) {
     })
 
     const message = chatCompletion.choices[0].message.content || "nothing"
+    
+    answerHistory.push({
+        role: "user",
+        content : req.body.diagnosis
+    },
+    {
+        role: "assistant",
+        content: message
+    }
+)
+
+await prisma.answer.update({
+    where: { id: answer.id },
+    data: { answerHistory: answerHistory }
+  })
     res.json(message)
    
    

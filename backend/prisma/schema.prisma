@@ -22,19 +22,21 @@ model User {
 }
 
 model Case {
-  id                  Int      @id @default(autoincrement())
+  id                  Int     @id @default(autoincrement())
   name                String
   systemprompt        String
   script              String
-  conversationHistory Json     @default("[]")
-  answer              Answers?
+  conversationHistory Json    @default("[]")
+  answer              Answer?
 }
 
-model Answers {
-  id        Int    @id @default(autoincrement())
-  diagnosis String
-  caseId    Int    @unique
-  case      Case   @relation(fields: [caseId], references: [id])
+model Answer {
+  id            Int    @id @default(autoincrement())
+  diagnosis     String
+  prompt        String
+  answerHistory Json   @default("[]")
+  caseId        Int    @unique
+  case          Case   @relation(fields: [caseId], references: [id])
 }
 
 enum Role {
